@@ -1,4 +1,4 @@
-import { postRouter } from "note/server/api/routers/post";
+import { exerciseRouter, postRouter } from "note/server/api/routers/post";
 import { createCallerFactory, createTRPCRouter } from "note/server/api/trpc";
 
 /**
@@ -8,7 +8,9 @@ import { createCallerFactory, createTRPCRouter } from "note/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   post: postRouter,
+  exercise: exerciseRouter
 });
+
 
 // export type definition of API
 export type AppRouter = typeof appRouter;

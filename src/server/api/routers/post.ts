@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { env } from "note/env";
 
 import {
   createTRPCRouter,
@@ -6,6 +7,31 @@ import {
   publicProcedure,
 } from "note/server/api/trpc";
 import { posts } from "note/server/db/schema";
+
+type Exercise = {
+  equipment: string;
+}
+export const exerciseRouter = createTRPCRouter({
+  getExercises: publicProcedure
+    .input(z.object({
+      muscle: z.string(), // Validate muscle input as a string
+    }))
+    .query(async ({ input }) => {
+      const apiKey = env.APIKEY;
+      const apiUrl = `https://api.api-ninjas.com/v1/exercises?muscle=${input.muscle}`;
+
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          'X-Api-Key': apiKey,
+        },
+      });
+
+      const data: Exercise[] = await response.json();
+
+      return data;
+    }),
+});
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
